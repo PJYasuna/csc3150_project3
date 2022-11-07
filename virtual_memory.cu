@@ -147,7 +147,7 @@ __device__ void vm_write(VirtualMemory *vm, u32 addr, uchar value) {
 
     else {
       int LRU_idx = get_LRU_position(vm); // victim
-      int LRU_disk_idx = vm->invert_page_table[LRU_idx + vm->PAGE_ENTRIES];
+      int LRU_disk_idx = vm->invert_page_table[LRU_idx + vm->PAGE_ENTRIES]; // pid_vpn
       for (int i = 0; i < vm->PAGESIZE; i++){                                              
         vm->storage[LRU_disk_idx*vm->PAGESIZE+i] = vm->buffer[LRU_idx*vm->PAGESIZE+i];   
         vm->buffer[LRU_idx*vm->PAGESIZE+i] = vm->storage[pid_vpn*vm->PAGESIZE+i]; 
@@ -165,6 +165,6 @@ __device__ void vm_snapshot(VirtualMemory *vm, uchar *results, int offset,
   /* Complete snapshot function togther with vm_read to load elements from data
    * to result buffer */
   for (int i = 0; i < input_size; i++){
-    results[i + offset] = vm_read(vm, i);
+    results[i] = vm_read(vm, i+offset);
   }
 }
